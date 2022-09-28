@@ -10,7 +10,6 @@ import FaceRecognition from "./comp/FaceRecognition";
 import Signin from "./comp/Signin";
 import Register from "./comp/Register";
 
-
 const initialState = {
   input: "",
   imageUrl: "",
@@ -67,7 +66,7 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    fetch("http://localhost:3001/imageUrl", {
+    fetch("https://calm-tor-32715.herokuapp.com/imageUrl", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -77,7 +76,7 @@ class App extends Component {
       .then((response) => response.json())
       .then((response) => {
         if (response.outputs) {
-          fetch("http://localhost:3001/image", {
+          fetch("https://calm-tor-32715.herokuapp.com/image", {
             method: "put",
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({
