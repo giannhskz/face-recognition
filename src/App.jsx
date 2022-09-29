@@ -1,14 +1,12 @@
-import "./App.css";
-import Navigation from "./comp/Navigation";
-import Logo from "./comp/Logo";
-import ImageLinkForm from "./comp/ImageLinkForm";
-import Rank from "./comp/Rank";
 import React, { Component } from "react";
-import Particle from "./comp/Particles";
-import Clarifai from "clarifai";
-import FaceRecognition from "./comp/FaceRecognition";
-import Signin from "./comp/Signin";
-import Register from "./comp/Register";
+import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
+import Navigation from "./components/Navigation/Navigation";
+import Signin from "./components/Signin/Signin";
+import Register from "./components/Register/Register";
+import Logo from "./components/Logo/Logo";
+import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
+import Rank from "./components/Rank/Rank";
+import "./App.css";
 
 const initialState = {
   input: "",
@@ -66,7 +64,7 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    fetch("https://calm-tor-32715.herokuapp.com/imageUrl", {
+    fetch("http://localhost:3000/imageurl", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -75,10 +73,10 @@ class App extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        if (response.outputs) {
-          fetch("https://calm-tor-32715.herokuapp.com/image", {
+        if (response) {
+          fetch("http://localhost:3000/image", {
             method: "put",
-            headers: { "Content-type": "application/json" },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               id: this.state.user.id,
             }),
@@ -98,17 +96,17 @@ class App extends Component {
     if (route === "signout") {
       this.setState(initialState);
     } else if (route === "home") {
-      this.setState({ isSignedin: true });
+      this.setState({ isSignedIn: true });
     }
     this.setState({ route: route });
   };
   render() {
-    const { imageUrl, box, route, isSignedin } = this.state;
+    const { isSignedIn, imageUrl, route, box } = this.state;
     return (
       <div className="App">
-        <Particle />
+        <Particles />
         <Navigation
-          isSignedin={isSignedin}
+          isSignedIn={isSignedIn}
           onRouteChange={this.onRouteChange}
         />
         {route === "home" ? (
@@ -125,15 +123,16 @@ class App extends Component {
             <FaceRecognition box={box} imageUrl={imageUrl} />
           </div>
         ) : route === "signin" ? (
-          <Signin onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
+          <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         ) : (
           <Register
-            onRouteChange={this.onRouteChange}
             loadUser={this.loadUser}
+            onRouteChange={this.onRouteChange}
           />
         )}
       </div>
     );
   }
 }
+
 export default App;
